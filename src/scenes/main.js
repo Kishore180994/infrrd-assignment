@@ -25,6 +25,7 @@ class Main extends PureComponent {
         dateTime: '',
         meetingRoom: '',
         description: '',
+        found: true,
       },
       isFormValid: true,
       errors: {
@@ -46,20 +47,22 @@ class Main extends PureComponent {
 
   //I will be searching the term among the array of the objects in training_events
   SearchTerm = word => {
-    // console.log(word);
-    // let results = this.state.training_events.map(eve => {
-    //   if (
-    //     eve['name'].indexOf(word) > -1 ||
-    //     eve['department'].indexOf(word) > -1 ||
-    //     eve['description'].indexOf(word) > -1
-    //   ) {
-    //     eve.found = true;
-    //   } else {
-    //     eve.found = false;
-    //   }
-    //   return eve;
-    // });
-    // console.log(results);
+    console.log(word);
+    let results = this.state.training_events.map(eve => {
+      if (
+        eve['name'].indexOf(word) > -1 ||
+        eve['department'].indexOf(word) > -1 ||
+        eve['description'].indexOf(word) > -1
+      ) {
+        eve.found = true;
+      } else {
+        eve.found = false;
+      }
+      return eve;
+    });
+    this.setState({
+      training_events: results,
+    });
   };
 
   //Validating the fields

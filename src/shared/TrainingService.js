@@ -10,6 +10,7 @@ class TrainingService {
         meeting_room: 'None',
         description: 'None',
         isEdit: false,
+        found: true,
       },
     ];
   }

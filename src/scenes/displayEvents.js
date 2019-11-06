@@ -21,13 +21,21 @@ const DisplayEvents = ({
 }) => {
   return (
     <List>
-      {allEvents.map(evnt => (
-        <li key={evnt.id}>
-          <div onDoubleClick={activateCard.bind(null, evnt.id)}>
-            <Card event={evnt} isEdit={evnt.isEdit} editCard={editCard}></Card>
-          </div>
-        </li>
-      ))}
+      {allEvents.map(evnt =>
+        evnt.found === false ? (
+          ''
+        ) : (
+          <li key={evnt.id}>
+            <div onDoubleClick={activateCard.bind(null, evnt.id)}>
+              <Card
+                event={evnt}
+                isEdit={evnt.isEdit}
+                editCard={editCard}
+              ></Card>
+            </div>
+          </li>
+        )
+      )}
     </List>
   );
 };
