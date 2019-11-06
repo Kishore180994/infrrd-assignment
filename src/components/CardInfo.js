@@ -1,78 +1,65 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import CardTemplate from '../templates/CardTemplate';
+import { Departments, MeetingRooms } from '../shared/SharedData';
 
-const Perimeter = styled.div`
-  display: flex;
-  border: 1px black solid;
-  justify-content: space-around;
-  flex-direction: column;
-  width: 100%;
+const ErrorDiv = styled.div`
+  background: red;
+  color: white;
 `;
 
-const RowFlex = styled.div`
-  display: flex;
-  flex-direction: row;
-  .first {
-    border: 1px red solid;
-    width: 100%;
-  }
-  .second {
-    border: 1px purple solid;
-    width: 100%;
-  }
-`;
-
-const CardInfo = ({ handleChange }) => {
+const CardInfo = ({ errors, handleChange }) => {
   return (
-    <Perimeter className="card">
-      <RowFlex>
-        <div className="first">
-          <div className="name">
-            <span>Name</span>
-            <input
-              type="text"
-              onChange={e => handleChange(e.target.value, 'name')}
-            ></input>
-          </div>
-          <div className="duration">
-            <span>Duration</span>
-            <input
-              type="text"
-              onChange={e => handleChange(e.target.value, 'duration')}
-            ></input>
-          </div>
-          <div className="meetingRoom">
-            <span>Meeting Room #</span>
-            <input
-              type="text"
-              onChange={e => handleChange(e.target.value, 'meetingRoom')}
-            ></input>
-          </div>
-        </div>
-        <div className="second">
-          <div className="department">
-            <span>Department</span>
-            <input
-              type="text"
-              onChange={e => handleChange(e.target.value, 'department')}
-            ></input>
-          </div>
-          <div className="date">
-            <span>Date</span>
-            <input
-              type="text"
-              onChange={e => handleChange(e.target.value, 'description')}
-            ></input>
-          </div>
-        </div>
-      </RowFlex>
-      <div className="desc">
-        <span>Description</span>
-        <textarea
-          onChange={e => handleChange(e.target.value, 'description')}
-        ></textarea>
+    <CardTemplate>
+      <div>
+        <input
+          type="text"
+          onChange={e => handleChange(e.target.value, 'name')}
+          placeholder="name"
+        ></input>
+        <ErrorDiv>{errors.name}</ErrorDiv>
       </div>
-    </Perimeter>
+      <div>
+        <input
+          type="text"
+          onChange={e => handleChange(e.target.value, 'duration')}
+          placeholder="duration"
+        ></input>
+        <ErrorDiv>{errors.duration}</ErrorDiv>
+      </div>
+      <div>
+        <select onChange={e => handleChange(e.target.value, 'meetingRoom')}>
+          {MeetingRooms.map(mr =>
+            mr.status === 'Available' ? <option>{mr.name}</option> : ''
+          )}
+        </select>
+        <ErrorDiv>{errors.meetingRoom}</ErrorDiv>
+      </div>
+      <div>
+        <select onChange={e => handleChange(e.target.value, 'department')}>
+          {Departments.map(d => (
+            <option>{d}</option>
+          ))}
+        </select>
+        <ErrorDiv>{errors.department}</ErrorDiv>
+      </div>
+      <div>
+        <input
+          type="datetime-local"
+          onChange={e => handleChange(e.target.value, 'dateTime')}
+          placeholder="date"
+        ></input>
+        <ErrorDiv>{errors.dateTime}</ErrorDiv>
+      </div>
+      <div>
+        <input
+          type="text"
+          onChange={e => handleChange(e.target.value, 'description')}
+          placeholder="description"
+        ></input>
+        <ErrorDiv>{errors.dateTime}</ErrorDiv>
+      </div>
+    </CardTemplate>
   );
 };
 

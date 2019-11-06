@@ -9,6 +9,7 @@ class TrainingService {
         dateTime: 'None',
         meeting_room: 'None',
         description: 'None',
+        isEdit: false,
       },
     ];
   }
@@ -18,11 +19,12 @@ class TrainingService {
   }
 
   async getEvent(id) {
-    return this.tr_events.map(e => {
+    let et = this.tr_events.map(e => {
       if (e.id === id) {
-        return Promise.resolve(e);
+        return e;
       }
     });
+    return Promise.resolve(et);
   }
 
   async addEvent(event) {
@@ -38,12 +40,14 @@ class TrainingService {
     });
   }
 
-  async updateEvent(id) {
-    this.tr_events.map(e => {
-      if (e.id === id) {
-        console.log(e);
+  async updateEvent(obj) {
+    this.tr_events = this.tr_events.map(e => {
+      if (e.id === obj.id) {
+        e = obj;
       }
+      return e;
     });
+    return Promise.resolve('Updated the Event');
   }
 }
 
