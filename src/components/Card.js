@@ -1,7 +1,13 @@
+/**
+|--------------------------------------------------
+| This component displays single event, which can also be editable by double 
+| clicking the card.
+|--------------------------------------------------
+*/
 import React from 'react';
 import styled from '@emotion/styled';
-import CardInfo from '../components/CardInfo';
 import CardTemplate from '../templates/CardTemplate';
+import { Departments, MeetingRooms } from '../shared/SharedData';
 
 const ToolTip = styled.div`
   visibility: hidden;
@@ -20,7 +26,7 @@ const ToolTip = styled.div`
 
 class Editable extends React.Component {
   render() {
-    const { event, editCard } = this.props;
+    const { event, editCard, meetRooms } = this.props;
     return (
       <CardTemplate>
         <div>
@@ -35,7 +41,7 @@ class Editable extends React.Component {
         </div>
         <div>
           <input
-            type="text"
+            type="number"
             className="duration"
             placeholder="Duration(in mins)"
             width="40"
@@ -44,24 +50,26 @@ class Editable extends React.Component {
           ></input>
         </div>
         <div>
-          <input
-            type="text"
-            className="meetingRoom"
-            placeholder="Meeting Room #"
-            width="40"
-            defaultValue={event.meeting_room}
-            onKeyPress={this.checkEnter}
-          ></input>
+          <select className="meetingRoom" onChange={e => this.finishEdit(e)}>
+            <option>Select</option>
+            {meetRooms.map(mr =>
+              mr.status !== 'Available' ? (
+                ''
+              ) : (
+                <option>
+                  {mr.name}-{mr.status}
+                </option>
+              )
+            )}
+          </select>
         </div>
         <div>
-          <input
-            type="text"
-            className="department"
-            placeholder="Department"
-            width="40"
-            defaultValue={event.department}
-            onKeyPress={this.checkEnter}
-          ></input>
+          <select className="department" onChange={e => this.finishEdit(e)}>
+            <option>Select</option>
+            {Departments.map(d => (
+              <option>{d}</option>
+            ))}
+          </select>
         </div>
         <div>
           <input
@@ -94,14 +102,21 @@ class Editable extends React.Component {
   };
 }
 
-const Card = ({ event, isEdit, editCard }) => {
-  if (isEdit) return <Editable event={event} editCard={editCard}></Editable>;
+const Card = ({ event, isEdit, editCard, meetRooms }) => {
+  if (isEdit)
+    return (
+      <Editable
+        event={event}
+        editCard={editCard}
+        meetRooms={meetRooms}
+      ></Editable>
+    );
   else
     return (
       <CardTemplate>
         <div>{event['name']}</div>
         <div>{event['duration']}</div>
-        <div>{event['meeting_room']}</div>
+        <div>{event['meetingRoom']}</div>
         <div>{event['department']}</div>
         <div>{event['dateTime']}</div>
         <ToolTip className="tooltip">Double click the card to edit</ToolTip>

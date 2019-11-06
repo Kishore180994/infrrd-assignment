@@ -1,3 +1,10 @@
+/**
+|--------------------------------------------------
+| This is the component which displays all the sessions
+| which are previously scheduled.
+|--------------------------------------------------
+*/
+
 import React from 'react';
 import Card from '../components/Card';
 import styled from '@emotion/styled';
@@ -16,6 +23,7 @@ const List = styled.ul`
 
 const DisplayEvents = ({
   allEvents,
+  meetRooms,
   activateCard = () => {},
   editCard = () => {},
 }) => {
@@ -28,6 +36,7 @@ const DisplayEvents = ({
           <li key={evnt.id}>
             <div onDoubleClick={activateCard.bind(null, evnt.id)}>
               <Card
+                meetRooms={meetRooms}
                 event={evnt}
                 isEdit={evnt.isEdit}
                 editCard={editCard}

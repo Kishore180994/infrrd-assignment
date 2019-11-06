@@ -1,14 +1,32 @@
+/**
+|--------------------------------------------------
+| This is the main component, which holds the state
+| of the all the components and values are passed 
+| with the help of props.
+| I created the TemplateService.js for this assignment, 
+| which can be used to implement CRUD operations.
+| Even though for this assignment, we can do without
+| that file.
+
+| Just used very simple styling for this assignment 
+|--------------------------------------------------
+*/
+
 import React, { PureComponent } from 'react';
 import Search from '../components/Search';
 import CardInfo from '../components/CardInfo';
 import uuid from 'uuid';
 import TrainingService from '../shared/TrainingService';
 import DisplayEvents from './DisplayEvents';
+import { Departments, MeetingRooms } from '../shared/SharedData';
 
 class Main extends PureComponent {
   constructor(props) {
     super(props);
     this.TrainingService = new TrainingService();
+
+    //Error messages which are used for verification.
+    //Used simple validation because of time constraint
     this.ERR_MSG = {
       NAME: 'Invalid Input. Name should be 5 characters long',
       DEPARTMENT: 'Value cannot not be empty',
@@ -16,6 +34,8 @@ class Main extends PureComponent {
       DATE_TIME: 'Please select the date and time',
       MEETING_ROOM: 'Please select from the available meeting rooms',
     };
+
+    //Master State => Used to store all the values across this platform.
     this.state = {
       event_input: {
         id: '',
@@ -36,6 +56,7 @@ class Main extends PureComponent {
         meetingRoom: '',
         description: '',
       },
+      meetRooms: MeetingRooms,
       training_events: [],
     };
   }
@@ -80,7 +101,7 @@ class Main extends PureComponent {
         isFormValid: false,
       });
     }
-    if (values.department === '') {
+    if (values.department === '' || values.department === 'Select') {
       let err = this.state.errors;
       err.department = this.ERR_MSG.DEPARTMENT;
       this.setState({
@@ -105,7 +126,7 @@ class Main extends PureComponent {
       });
     }
 
-    if (values.meeting_room === '') {
+    if (values.meeting_room === '' || values.meeting_room === 'Select') {
       let err = this.state.errors;
       err.meetingRoom = this.ERR_MSG.MEETING_ROOM;
       this.setState({
@@ -117,6 +138,7 @@ class Main extends PureComponent {
     return this.state.isFormValid;
   };
 
+  //getting the values from the service.
   getEvents = async () => {
     await this.TrainingService.getAllEvents().then(events => {
       this.setState({
@@ -125,16 +147,44 @@ class Main extends PureComponent {
     });
   };
 
+  //Adding the event to the service and also to the state
   addEventToService = async () => {
     await this.fieldValidations(this.state.event_input)
       .then(res => {
         if (this.state.isFormValid) {
+          //Adding the new event to the state and to the service
           const temp = { ...this.state.event_input };
+          const temp1 = temp;
           temp['id'] = uuid.v4();
-          this.TrainingService.addEvent(temp).then(res => {
-            console.log(res);
-            this.setState({ training_events: res });
-          });
+          this.TrainingService.addEvent(temp)
+            .then(res => {
+              this.setState({
+                //Clearing the errors
+                errors: {
+                  name: '',
+                  department: '',
+                  duration: '',
+                  dateTime: '',
+                  meetingRoom: '',
+                  description: '',
+                },
+                training_events: res,
+              });
+            })
+            .then(res => {
+              //Modifying the status of meeting room
+              let temp1 = MeetingRooms.map(mr => {
+                if (
+                  temp.meetingRoom.indexOf(mr.name) > -1 &&
+                  mr.status === 'Available'
+                )
+                  mr.status = 'NA';
+                return mr;
+              });
+              this.setState({
+                meetRooms: temp1,
+              });
+            });
         } else {
           console.log('error');
         }
@@ -142,6 +192,7 @@ class Main extends PureComponent {
       .catch(e => console.log(e));
   };
 
+  //Clicking on any of the event to update the event.
   activateCard = async (type, e) => {
     e.stopPropagation();
     await this.TrainingService.getEvent(type).then(async res => {
@@ -166,6 +217,7 @@ class Main extends PureComponent {
     });
   };
 
+  //Editing the event
   editCard = (value, id) => {
     console.log('Editing the card', value, id);
     //value => ClassName and the updated Value and ID
@@ -194,6 +246,8 @@ class Main extends PureComponent {
     });
   };
 
+  //This method is to dynamically store the values to the state from
+  // input field
   handleChange = async (e, type) => {
     const inputs = this.state.event_input;
     inputs[type] = e;
@@ -201,16 +255,21 @@ class Main extends PureComponent {
       event_input: inputs,
     });
   };
+
+  //Render
   render() {
     return (
       <div>
+        <h2>Infrrd Take Home assignment</h2>
         <CardInfo
+          meetRooms={this.state.meetRooms}
           errors={this.state.errors}
           handleChange={this.handleChange}
         ></CardInfo>
         <button onClick={this.addEventToService}>Add Event</button>
         <Search SearchTerm={this.SearchTerm}></Search>
         <DisplayEvents
+          meetRooms={this.state.meetRooms}
           allEvents={this.state.training_events}
           activateCard={this.activateCard}
           editCard={this.editCard}

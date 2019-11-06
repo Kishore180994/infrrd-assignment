@@ -1,3 +1,9 @@
+/**
+|--------------------------------------------------
+| This is the re-usable component(template) designed
+| for all the cards.
+|--------------------------------------------------
+*/
 import React from 'react';
 import styled from '@emotion/styled';
 

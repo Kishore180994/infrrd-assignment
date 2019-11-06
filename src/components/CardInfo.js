@@ -1,3 +1,9 @@
+/**
+|--------------------------------------------------
+| This component is used to Book the sessions
+|--------------------------------------------------
+*/
+
 import React from 'react';
 import styled from '@emotion/styled';
 import CardTemplate from '../templates/CardTemplate';
@@ -8,7 +14,7 @@ const ErrorDiv = styled.div`
   color: white;
 `;
 
-const CardInfo = ({ errors, handleChange }) => {
+const CardInfo = ({ errors, handleChange, meetRooms }) => {
   return (
     <CardTemplate>
       <div>
@@ -21,22 +27,33 @@ const CardInfo = ({ errors, handleChange }) => {
       </div>
       <div>
         <input
-          type="text"
+          type="number"
           onChange={e => handleChange(e.target.value, 'duration')}
           placeholder="duration"
         ></input>
         <ErrorDiv>{errors.duration}</ErrorDiv>
       </div>
       <div>
-        <select onChange={e => handleChange(e.target.value, 'meetingRoom')}>
-          {MeetingRooms.map(mr =>
-            mr.status === 'Available' ? <option>{mr.name}</option> : ''
+        <select
+          defaultValue="Select from below options"
+          onChange={e => handleChange(e.target.value, 'meetingRoom')}
+        >
+          <option>Select</option>
+          {meetRooms.map(mr =>
+            mr.status !== 'Available' ? (
+              ''
+            ) : (
+              <option>
+                {mr.name}-{mr.status}
+              </option>
+            )
           )}
         </select>
         <ErrorDiv>{errors.meetingRoom}</ErrorDiv>
       </div>
       <div>
         <select onChange={e => handleChange(e.target.value, 'department')}>
+          <option>Select</option>
           {Departments.map(d => (
             <option>{d}</option>
           ))}

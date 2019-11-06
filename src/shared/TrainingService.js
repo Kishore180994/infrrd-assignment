@@ -1,3 +1,10 @@
+/**
+|--------------------------------------------------
+| Created this class in order to show the CRUD
+| operations
+|--------------------------------------------------
+*/
+
 class TrainingService {
   constructor() {
     this.tr_events = [
@@ -31,14 +38,6 @@ class TrainingService {
   async addEvent(event) {
     this.tr_events = this.tr_events.concat(event);
     return Promise.resolve(this.tr_events);
-  }
-
-  async deleteEvent(id) {
-    this.tr_events.map(e => {
-      if (e.id === id) {
-        console.log(e);
-      }
-    });
   }
 
   async updateEvent(obj) {

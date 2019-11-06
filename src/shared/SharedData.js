@@ -1,3 +1,10 @@
+/**
+|--------------------------------------------------
+| This is the data I used for Departments and 
+| Meeting Rooms.
+|--------------------------------------------------
+*/
+
 export const Departments = [
   'Engineering',
   'Information Technology',
@@ -8,7 +15,7 @@ export const Departments = [
   'Design',
 ];
 
-export const MeetingRooms = [
+export let MeetingRooms = [
   { name: '101', status: 'Available' },
   { name: '102', status: 'Available' },
   { name: '103', status: 'Available' },
